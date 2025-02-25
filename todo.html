@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TODO</title>
+  <style>
+
+    body{
+      background-color: rgb(137, 244, 137);
+      height: 90vh;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      flex-direction: column;
+    }
+
+    .container{
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      width: 80%;
+      height: 80%;
+      border-radius: 5px;
+    }
+
+    .main{
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      width: 100%;
+      height: 38%;
+      flex-direction: column;
+    }
+
+    input{
+      border-radius: 5px;
+      border: transparent;
+      padding: 3px 10px;
+      font-size: 1rem;
+      width: 23%;
+      transition: .3s;
+    }
+
+    input:focus{
+      border: 1.8px solid rgb(250, 98, 42);
+      padding: 5px 12px;
+      outline: none;
+    }
+
+    button{
+      width: 10%;
+      padding: .4em;
+      font-weight: 500;
+      border-radius: 5px;
+      border: 1.8px solid rgb(250, 98, 42);
+      background-color: coral;
+      color: white;
+      cursor: pointer;
+      transition: .3s;
+    }
+
+    button:hover{
+      scale: 1.1;
+    }
+
+    .display{
+      width: 50%;
+      height: 100%;
+      display: grid;
+      grid-auto-rows: 50px;
+      grid-template-columns: 1fr 1fr 1fr;
+      place-items: center;
+      overflow-y: scroll;
+      scrollbar-width: none;
+      font-size: 1.3rem;
+      text-transform: uppercase;
+    }
+
+    .display > p {
+      width: 100%; /* Ensure it takes the full width */
+      white-space: nowrap; /* Prevents text from wrapping */
+      overflow: hidden; /* Hides overflow text */
+      text-overflow: ellipsis; /* Adds '...' when text overflows */
+      max-width: 90%; /* Adjust as needed */
+    }
+
+
+    .input::placeholder{
+      font-size: .7rem;
+    }
+
+    .display > button{
+      width: 65%;
+    }
+
+    @media (max-width: 400px){
+      input{
+        width: 90%;
+      }
+
+      button{
+        width: 40%;
+      }
+
+      .display{
+        font-size: .7rem;
+        width: 99%;
+        gap: 10px;
+      }
+
+      .display > button{
+        width: 100%;
+      }
+    }
+
+  </style>
+</head>
+<body>
+
+  <h2>TODO LIST</h2>
+  <div class="container">
+    <form class="main">
+      <input type="text" placeholder="Write What's in your Mind..." class="activity" autofocus required maxlength="50">
+      <input type="date" class="date" required>
+      <button onclick="add()">ADD</button>
+    </form>
+    <div class="display"></div>
+  </div>
+
+
+  <script>
+    let list = JSON.parse(localStorage.getItem("List")) || [];
+    function add(){
+      let activity = document.querySelector('.activity').value;
+      let date = document.querySelector('.date').value;
+
+      if(activity === '' || date == '')
+        return;
+
+      list = JSON.parse(localStorage.getItem("List")) || [];
+      list.push({activity, date});
+
+      localStorage.setItem("List", JSON.stringify(list));
+
+      display();
+      document.querySelector('.activity').value = '';
+    }
+
+    function display(){
+
+      StoredList = JSON.parse(localStorage.getItem("List")) || [];
+
+      document.querySelector('.display').innerHTML = StoredList
+        .map((item, index) => `<p>${item.activity}</p><p>${item.date}</p><button onclick="delete_(${index})">Delete</button>`)
+        .join('');
+    }
+
+    function delete_(index){
+      StoredList = JSON.parse(localStorage.getItem("List")) || [];
+      StoredList.splice(index, 1);
+      localStorage.setItem("List", JSON.stringify(StoredList));
+      display();
+    }
+
+    display();
+  </script>
+</body>
+</html>
